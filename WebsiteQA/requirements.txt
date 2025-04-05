@@ -1,0 +1,10 @@
+agency-swarm
+pydantic
+requests
+html2text
+crawl4ai
+python-dotenv
+openai>=1.10.0
+aiofiles
+lxml
+gradio
