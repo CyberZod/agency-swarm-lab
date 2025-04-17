@@ -21,7 +21,11 @@ class UploadToOpenAITool(BaseTool):
     Retrieves scraped file paths from shared state ('scraped_files') and requires
     'session_name' to be set in shared state to identify the correct thread.
     """
-    async def run(self) -> str:
+    def run(self) -> str:
+        """Synchronous execution for compatibility."""
+        return asyncio.run(self._async_run())
+
+    async def _async_run(self) -> str:
         """Main async entry point for the upload workflow."""
         # ✅ Retrieve session ID
         if not (session_name := self._shared_state.get("session_name")):
@@ -228,7 +232,7 @@ class UploadToOpenAITool(BaseTool):
 
 # Example Test Case (requires async execution and shared state setup)
 if __name__ == "__main__":
-    async def main():
+    def main():
         # --- Setup for Testing ---
         # 1. Create dummy files to upload
         test_dir = "test_upload_files"
@@ -265,7 +269,7 @@ if __name__ == "__main__":
 
         # --- Run the tool ---
         print("--- Running UploadToOpenAITool ---")
-        result = await tool.run()
+        result = tool.run()
         print("--- Tool Run Result ---")
         print(result)
 

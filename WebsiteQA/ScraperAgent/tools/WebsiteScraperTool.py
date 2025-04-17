@@ -21,8 +21,20 @@ class WebsiteScraperTool(BaseTool):
     max_concurrent: Optional[int] = Field(
         5, description="The maximum number of concurrent scraping tasks."
     )
+    def run(self) -> str:
+        """
+        Executes the website scraper tool synchronously.
 
-    async def run(self) -> str: # Modified return type to string as per best practices
+        This method is the entry point for the tool and runs the asynchronous
+        scraping process, which fetches URLs from the sitemap, scrapes the
+        website content, converts it to Markdown, and stores the results.
+
+        Returns:
+            str: A message indicating the number of pages scraped and stored.
+        """
+
+        return asyncio.run(self._async_run())
+    async def _async_run(self) -> str: # Modified return type to string as per best practices
         """
         Runs the website scraper tool.
         Fetches sitemap URLs, scrapes content, and saves as markdown files.
@@ -118,9 +130,9 @@ class WebsiteScraperTool(BaseTool):
 
 if __name__ == "__main__":
     # Example usage for testing
-    async def main():
+    def main():
         tool = WebsiteScraperTool(website_url="https://ai.pydantic.dev", max_concurrent=10)
-        result = await tool.run()
+        result = tool.run()
         if result:
             print("Success")
         else:
@@ -128,4 +140,4 @@ if __name__ == "__main__":
         # Retrieve saved files from shared state (requires shared state setup)
         # print("\nShared State:", tool._shared_state.get(f"scraped_files"))
 
-    asyncio.run(main())
+    main()
